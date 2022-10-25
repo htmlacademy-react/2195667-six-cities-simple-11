@@ -1,5 +1,11 @@
-function App(): JSX.Element {
-  return <p>Hello, world!</p>;
+import MainPage from '../../pages/main-page/main-page';
+
+type Props = {
+  offerCount: number;
+}
+
+function App({ offerCount }: Props): JSX.Element {
+  return <MainPage offerCount={offerCount} />;
 }
 
 export default App;
