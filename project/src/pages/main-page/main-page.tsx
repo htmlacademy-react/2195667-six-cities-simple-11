@@ -1,14 +1,16 @@
-import Card from '../../components/card/card';
+import OffersList from '../../components/offers-list/offers-list';
 import PageWrapper from '../../components/page-wrapper/page-wrapper';
 import Tabs from '../../components/tabs/tabs';
+import { Offers } from '../../types/offers';
 
 type Props = {
   offerCount: number;
+  offers: Offers;
 }
 
-function MainPage({ offerCount }: Props): JSX.Element {
+function MainPage({ offerCount, offers }: Props): JSX.Element {
   return (
-    <PageWrapper pageClass='page--gray page--main'>
+    <PageWrapper pageClass="page--gray page--main">
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
         <Tabs />
@@ -45,13 +47,7 @@ function MainPage({ offerCount }: Props): JSX.Element {
                   </li>
                 </ul>
               </form>
-              <div className="cities__places-list places__list tabs__content">
-                <Card />
-                <Card />
-                <Card />
-                <Card />
-                <Card />
-              </div>
+              <OffersList offers={offers} />
             </section>
             <div className="cities__right-section">
               <section className="cities__map map"></section>
