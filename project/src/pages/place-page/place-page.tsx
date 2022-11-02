@@ -10,9 +10,7 @@ type Props = {
 
 function PlacePage(props: Props): JSX.Element {
   const { id } = useParams();
-  const { offers } = props;
-
-  const offer = offers.find((el) => String(el.id) === id);
+  const offer = props.offers.find((el) => String(el.id) === id);
 
   if (!offer) {
     return <NotFoundPage />;
