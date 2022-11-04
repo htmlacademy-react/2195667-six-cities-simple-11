@@ -1,6 +1,8 @@
+import Map from '../../components/map/map';
 import OffersList from '../../components/offers-list/offers-list';
 import PageWrapper from '../../components/page-wrapper/page-wrapper';
 import Tabs from '../../components/tabs/tabs';
+import { City } from '../../types/cities';
 import { Offers } from '../../types/offers';
 
 type Props = {
@@ -9,6 +11,8 @@ type Props = {
 }
 
 function MainPage({ offerCount, offers }: Props): JSX.Element {
+  const city: City = offers[0].city;
+
   return (
     <PageWrapper pageClass="page--gray page--main">
       <main className="page__main page__main--index">
@@ -49,8 +53,11 @@ function MainPage({ offerCount, offers }: Props): JSX.Element {
               </form>
               <OffersList offers={offers} />
             </section>
-            <div className="cities__right-section">
-              <section className="cities__map map"></section>
+            <div
+              className="cities__right-section"
+              style={{ width: 'calc(100% - 572px)' }}
+            >
+              <Map offers={offers} city={city} />
             </div>
           </div>
         </div>

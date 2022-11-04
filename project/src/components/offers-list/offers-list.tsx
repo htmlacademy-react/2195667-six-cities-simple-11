@@ -7,7 +7,7 @@ type Props = {
 }
 
 function OffersList(props: Props) {
-  const [, setIsActive] = useState({});
+  const [, setIsActive] = useState<number>(-1);
 
   return (
     <div className="cities__places-list places__list tabs__content">

@@ -4,7 +4,7 @@ import { Offer } from '../../types/offers';
 
 type Props = {
   offer: Offer;
-  onCardHover: (offer: Offer) => void;
+  onCardHover: (offerId: number) => void;
 }
 
 function Card(props: Props): JSX.Element {
@@ -14,7 +14,8 @@ function Card(props: Props): JSX.Element {
   return (
     <article
       className="cities__card place-card"
-      onMouseEnter={() => props.onCardHover(offer)}
+      onMouseEnter={() => props.onCardHover(offer.id)}
+      onMouseLeave={() => props.onCardHover(-1)}
       id={String(offer.id)}
     >
       <div className="cities__image-wrapper place-card__image-wrapper">

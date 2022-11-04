@@ -4,7 +4,7 @@ export const offers: Offers = [
   {
     city: {
       name: 'Amsterdam',
-      location: { latitude: 52.37454, longitude: 4.897976, zoom: 13 }
+      location: { latitude: 52.37454, longitude: 4.897976, zoom: 12 }
     },
     previewImage: 'https://11.react.pages.academy/static/hotel/18.jpg',
     images: [
@@ -50,13 +50,13 @@ export const offers: Offers = [
     },
     description:
       'Relax, rejuvenate and unplug in this ultimate rustic getaway experience in the country. In our beautiful screened Pondhouse, you can gaze at the stars and listen to the sounds of nature from your cozy warm bed.',
-    location: { latitude: 52.37854, longitude: 4.894976, zoom: 16 },
+    location: { latitude: 52.3909553943508, longitude: 4.85309666406198, zoom: 16 },
     id: 1
   },
   {
     city: {
-      name: 'Brussels',
-      location: { latitude: 50.846557, longitude: 4.351697, zoom: 13 }
+      name: 'Amsterdam',
+      location: { latitude: 52.37454, longitude: 4.897976, zoom: 12 }
     },
     previewImage: 'https://11.react.pages.academy/static/hotel/13.jpg',
     images: [
@@ -101,13 +101,13 @@ export const offers: Offers = [
     },
     description:
       'Discover daily local life in city center, friendly neighborhood, clandestine casino, karaoke, old-style artisans, art gallery and artist studio downstairs.',
-    location: { latitude: 50.844556999999995, longitude: 4.346697, zoom: 16 },
+    location: { latitude: 52.3609553943508, longitude: 4.85309666406198, zoom: 16 },
     id: 2
   },
   {
     city: {
-      name: 'Brussels',
-      location: { latitude: 50.846557, longitude: 4.351697, zoom: 13 }
+      name: 'Amsterdam',
+      location: { latitude: 52.37454, longitude: 4.897976, zoom: 12 }
     },
     previewImage: 'https://11.react.pages.academy/static/hotel/3.jpg',
     images: [
@@ -152,13 +152,13 @@ export const offers: Offers = [
     },
     description:
       'Relax, rejuvenate and unplug in this ultimate rustic getaway experience in the country. In our beautiful screened Pondhouse, you can gaze at the stars and listen to the sounds of nature from your cozy warm bed.',
-    location: { latitude: 50.867557, longitude: 4.357697, zoom: 16 },
+    location: { latitude: 52.3909553943508, longitude: 4.929309666406198, zoom: 16 },
     id: 3
   },
   {
     city: {
-      name: 'Cologne',
-      location: { latitude: 50.938361, longitude: 6.959974, zoom: 13 }
+      name: 'Amsterdam',
+      location: { latitude: 52.37454, longitude: 4.897976, zoom: 12 }
     },
     previewImage: 'https://11.react.pages.academy/static/hotel/17.jpg',
     images: [
@@ -198,7 +198,7 @@ export const offers: Offers = [
     },
     description:
       'Relax, rejuvenate and unplug in this ultimate rustic getaway experience in the country. In our beautiful screened Pondhouse, you can gaze at the stars and listen to the sounds of nature from your cozy warm bed.',
-    location: { latitude: 50.960361, longitude: 6.967974, zoom: 16 },
+    location: { latitude: 52.3809553943508, longitude: 4.939309666406198, zoom: 16 },
     id: 4
   }
 ];
