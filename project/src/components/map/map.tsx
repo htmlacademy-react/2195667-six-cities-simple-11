@@ -1,13 +1,13 @@
 import { useEffect, useRef } from 'react';
 import useMap from '../../hooks/useMap';
 import { Offers } from '../../types/offers';
-import { Points } from '../../types/map'; //Point
 import { Icon, Marker } from 'leaflet';
 import { City } from '../../types/cities';
 
 type MapProps = {
   offers: Offers;
   city: City;
+  mapClass?: string;
   // points: Points
   // selectedPoint: Point | undefined
 }
@@ -25,11 +25,9 @@ const defaultCustomIcon = new Icon({
 // });
 
 function Map(props: MapProps): JSX.Element {
-  const { offers, city } = props;
+  const { offers, city, mapClass } = props;
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
-  const points: Points = [];
-  offers.map((offer) => points.push(offer.location));
 
   useEffect(() => {
     if (map) {
@@ -42,9 +40,9 @@ function Map(props: MapProps): JSX.Element {
         marker.setIcon(defaultCustomIcon).addTo(map);
       });
     }
-  }, [map, city, points]);
+  }, [map, city, offers]);
 
-  return <section className="cities__map map" ref={mapRef} />;
+  return <section className={`map ${mapClass || ''}`} ref={mapRef} />;
 }
 
 export default Map;

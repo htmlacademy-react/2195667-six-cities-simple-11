@@ -4,15 +4,22 @@ import Card from '../card/card';
 
 type Props = {
   offers: Offers;
+  listClass?: string;
+  cardClass?: string;
 }
 
 function OffersList(props: Props) {
   const [, setIsActive] = useState<number>(-1);
 
   return (
-    <div className="cities__places-list places__list tabs__content">
+    <div className={`places__list ${props.listClass || ''}`}>
       {props.offers.map((offer) => (
-        <Card offer={offer} key={offer.id} onCardHover={setIsActive} />
+        <Card
+          offer={offer}
+          key={offer.id}
+          onCardHover={setIsActive}
+          cardClass={props.cardClass}
+        />
       ))}
     </div>
   );

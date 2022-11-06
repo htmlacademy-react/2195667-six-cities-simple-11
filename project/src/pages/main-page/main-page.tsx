@@ -51,13 +51,13 @@ function MainPage({ offerCount, offers }: Props): JSX.Element {
                   </li>
                 </ul>
               </form>
-              <OffersList offers={offers} />
+              <OffersList offers={offers} listClass="cities__places-list tabs__content" cardClass="cities" />
             </section>
             <div
               className="cities__right-section"
               style={{ width: 'calc(100% - 572px)' }}
             >
-              <Map offers={offers} city={city} />
+              <Map offers={offers} city={city} mapClass='cities__map' />
             </div>
           </div>
         </div>
