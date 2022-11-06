@@ -3,29 +3,31 @@ import useMap from '../../hooks/useMap';
 import { Offers } from '../../types/offers';
 import { Icon, Marker } from 'leaflet';
 import { City } from '../../types/cities';
+import { MapMarker } from '../../const';
+import { Point } from '../../types/map';
 
 type MapProps = {
   offers: Offers;
   city: City;
   mapClass?: string;
   // points: Points
-  // selectedPoint: Point | undefined
+  selectedPoint: Point | undefined;
 }
 
 const defaultCustomIcon = new Icon({
-  iconUrl: '/img/pin.svg',
+  iconUrl: MapMarker.Default,
   iconSize: [28, 40],
   iconAnchor: [14, 40]
 });
 
-// const currentCustomIcon = new Icon({
-//   iconUrl: '/img/pin-active.svg',
-//   iconSize: [28, 40],
-//   iconAnchor: [14, 40]
-// });
+const currentCustomIcon = new Icon({
+  iconUrl: MapMarker.Current,
+  iconSize: [28, 40],
+  iconAnchor: [14, 40]
+});
 
 function Map(props: MapProps): JSX.Element {
-  const { offers, city, mapClass } = props;
+  const { offers, city, mapClass, selectedPoint } = props;
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
 
@@ -37,10 +39,18 @@ function Map(props: MapProps): JSX.Element {
           lng: point.location.longitude
         });
 
-        marker.setIcon(defaultCustomIcon).addTo(map);
+        marker
+          .setIcon(
+            selectedPoint !== undefined &&
+              point.location.latitude === selectedPoint.latitude &&
+              point.location.longitude === selectedPoint.longitude
+              ? currentCustomIcon
+              : defaultCustomIcon
+          )
+          .addTo(map);
       });
     }
-  }, [map, city, offers]);
+  }, [map, city, offers, selectedPoint]);
 
   return <section className={`map ${mapClass || ''}`} ref={mapRef} />;
 }

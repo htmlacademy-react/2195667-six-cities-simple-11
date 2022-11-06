@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import Map from '../../components/map/map';
 import OffersList from '../../components/offers-list/offers-list';
 import PageWrapper from '../../components/page-wrapper/page-wrapper';
 import Tabs from '../../components/tabs/tabs';
 import { City } from '../../types/cities';
+import { Point } from '../../types/map';
 import { Offers } from '../../types/offers';
 
 type Props = {
@@ -11,7 +13,16 @@ type Props = {
 }
 
 function MainPage({ offerCount, offers }: Props): JSX.Element {
+  const [selectedPoint, setSelectedPoint] = useState<Point | undefined>(
+    undefined
+  );
   const city: City = offers[0].city;
+
+  const onActiveChange = (id: number) => {
+    const point =
+      id > 0 ? offers.find((offer) => offer.id === id)?.location : undefined;
+    setSelectedPoint(point);
+  };
 
   return (
     <PageWrapper pageClass="page--gray page--main">
@@ -51,13 +62,23 @@ function MainPage({ offerCount, offers }: Props): JSX.Element {
                   </li>
                 </ul>
               </form>
-              <OffersList offers={offers} listClass="cities__places-list tabs__content" cardClass="cities" />
+              <OffersList
+                offers={offers}
+                listClass="cities__places-list tabs__content"
+                cardClass="cities"
+                onActiveChange={onActiveChange}
+              />
             </section>
             <div
               className="cities__right-section"
               style={{ width: 'calc(100% - 572px)' }}
             >
-              <Map offers={offers} city={city} mapClass='cities__map' />
+              <Map
+                selectedPoint={selectedPoint}
+                offers={offers}
+                city={city}
+                mapClass="cities__map"
+              />
             </div>
           </div>
         </div>

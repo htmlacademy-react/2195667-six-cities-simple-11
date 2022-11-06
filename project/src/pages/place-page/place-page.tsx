@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Map from '../../components/map/map';
 import OffersList from '../../components/offers-list/offers-list';
@@ -6,6 +7,7 @@ import ReviewForm from '../../components/review-form/review-form';
 import ReviewList from '../../components/review-list/review-list';
 import { comments } from '../../mocks/comments';
 import { City } from '../../types/cities';
+import { Point } from '../../types/map';
 import { Offers } from '../../types/offers';
 import NotFoundPage from '../not-found-page/not-found-page';
 
@@ -15,9 +17,20 @@ type Props = {
 
 function PlacePage(props: Props): JSX.Element {
   const { id } = useParams();
-  const offersBeside = props.offers.slice(0, 3 ); // TODO: temp data
+  const offersBeside = props.offers.slice(0, 3); // TODO: temp data
   const offer = props.offers.find((el) => String(el.id) === id);
   const commentList = comments;
+
+  const [selectedPoint, setSelectedPoint] = useState<Point | undefined>(
+    offer?.location
+  );
+  const onActiveChange = (offerId: number) => {
+    const point =
+      offerId > 0
+        ? props.offers.find((offerItem) => offerItem.id === offerId)?.location
+        : undefined;
+    setSelectedPoint(point);
+  };
 
   if (!offer) {
     return <NotFoundPage />;
@@ -114,7 +127,12 @@ function PlacePage(props: Props): JSX.Element {
             </div>
           </div>
 
-          <Map mapClass="property__map" offers={props.offers} city={city} />
+          <Map
+            selectedPoint={selectedPoint}
+            offers={offersBeside}
+            city={city}
+            mapClass="property__map"
+          />
           <section className=" map" />
         </section>
         {offersBeside.length && (
@@ -127,6 +145,7 @@ function PlacePage(props: Props): JSX.Element {
                 offers={offersBeside}
                 listClass="near-places__list"
                 cardClass="near-places"
+                onActiveChange={onActiveChange}
               />
             </section>
           </div>
