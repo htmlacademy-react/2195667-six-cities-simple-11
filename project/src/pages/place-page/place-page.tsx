@@ -1,7 +1,15 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Map from '../../components/map/map';
+import OffersList from '../../components/offers-list/offers-list';
 import PageWrapper from '../../components/page-wrapper/page-wrapper';
 import ReviewForm from '../../components/review-form/review-form';
+import ReviewList from '../../components/review-list/review-list';
+import { comments } from '../../mocks/comments';
+import { City } from '../../types/cities';
+import { Point } from '../../types/map';
 import { Offers } from '../../types/offers';
+import { countRatingStars } from '../../utils/rating';
 import NotFoundPage from '../not-found-page/not-found-page';
 
 type Props = {
@@ -10,11 +18,26 @@ type Props = {
 
 function PlacePage(props: Props): JSX.Element {
   const { id } = useParams();
+  const offersBeside = props.offers.slice(0, 3); // TODO: temp data
   const offer = props.offers.find((el) => String(el.id) === id);
+  const commentList = comments;
+
+  const [selectedPoint, setSelectedPoint] = useState<Point | undefined>(
+    offer?.location
+  );
+  const onActiveChange = (offerId: number) => {
+    const point =
+      offerId > 0
+        ? props.offers.find((offerItem) => offerItem.id === offerId)?.location
+        : undefined;
+    setSelectedPoint(point);
+  };
 
   if (!offer) {
     return <NotFoundPage />;
   }
+
+  const city: City = offer.city;
 
   return (
     <PageWrapper>
@@ -41,10 +64,7 @@ function PlacePage(props: Props): JSX.Element {
               </div>
               <div className="property__rating rating">
                 <div className="property__stars rating__stars">
-                  <span
-                    style={{ width: `${(offer.rating * 100) / 5}%` }}
-                  >
-                  </span>
+                  <span style={{ width: countRatingStars(offer.rating) }} />
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="property__rating-value rating__value">
@@ -99,159 +119,38 @@ function PlacePage(props: Props): JSX.Element {
               </div>
               <section className="property__reviews reviews">
                 <h2 className="reviews__title">
-                  Reviews &middot; <span className="reviews__amount">1</span>
+                  Reviews &middot;{' '}
+                  <span className="reviews__amount">{commentList.length}</span>
                 </h2>
-                <ul className="reviews__list">
-                  <li className="reviews__item">
-                    <div className="reviews__user user">
-                      <div className="reviews__avatar-wrapper user__avatar-wrapper">
-                        <img
-                          className="reviews__avatar user__avatar"
-                          src="img/avatar-max.jpg"
-                          width="54"
-                          height="54"
-                          alt="Reviews avatar"
-                        />
-                      </div>
-                      <span className="reviews__user-name">Max</span>
-                    </div>
-                    <div className="reviews__info">
-                      <div className="reviews__rating rating">
-                        <div className="reviews__stars rating__stars">
-                          <span style={{ width: '80%' }}></span>
-                          <span className="visually-hidden">Rating</span>
-                        </div>
-                      </div>
-                      <p className="reviews__text">
-                        A quiet cozy and picturesque that hides behind a a river
-                        by the unique lightness of Amsterdam. The building is
-                        green and from 18th century.
-                      </p>
-                      <time className="reviews__time" dateTime="2019-04-24">
-                        April 2019
-                      </time>
-                    </div>
-                  </li>
-                </ul>
+                <ReviewList comments={commentList} />
                 <ReviewForm />
               </section>
             </div>
           </div>
-          <section className="property__map map"></section>
+
+          <Map
+            selectedPoint={selectedPoint}
+            offers={offersBeside}
+            city={city}
+            mapClass="property__map"
+          />
+          <section className=" map" />
         </section>
-        <div className="container">
-          <section className="near-places places">
-            <h2 className="near-places__title">
-              Other places in the neighbourhood
-            </h2>
-            <div className="near-places__list places__list">
-              <article className="near-places__card place-card">
-                <div className="near-places__image-wrapper place-card__image-wrapper">
-                  <a href="#">
-                    <img
-                      className="place-card__image"
-                      src="img/room.jpg"
-                      width="260"
-                      height="200"
-                      alt="Place image"
-                    />
-                  </a>
-                </div>
-                <div className="place-card__info">
-                  <div className="place-card__price-wrapper">
-                    <div className="place-card__price">
-                      <b className="place-card__price-value">&euro;80</b>
-                      <span className="place-card__price-text">
-                        &#47;&nbsp;night
-                      </span>
-                    </div>
-                  </div>
-                  <div className="place-card__rating rating">
-                    <div className="place-card__stars rating__stars">
-                      <span style={{ width: '80%' }}></span>
-                      <span className="visually-hidden">Rating</span>
-                    </div>
-                  </div>
-                  <h2 className="place-card__name">
-                    <a href="#">Wood and stone place</a>
-                  </h2>
-                  <p className="place-card__type">Private room</p>
-                </div>
-              </article>
-
-              <article className="near-places__card place-card">
-                <div className="near-places__image-wrapper place-card__image-wrapper">
-                  <a href="#">
-                    <img
-                      className="place-card__image"
-                      src="img/apartment-02.jpg"
-                      width="260"
-                      height="200"
-                      alt="Place image"
-                    />
-                  </a>
-                </div>
-                <div className="place-card__info">
-                  <div className="place-card__price-wrapper">
-                    <div className="place-card__price">
-                      <b className="place-card__price-value">&euro;132</b>
-                      <span className="place-card__price-text">
-                        &#47;&nbsp;night
-                      </span>
-                    </div>
-                  </div>
-                  <div className="place-card__rating rating">
-                    <div className="place-card__stars rating__stars">
-                      <span style={{ width: '80%' }}></span>
-                      <span className="visually-hidden">Rating</span>
-                    </div>
-                  </div>
-                  <h2 className="place-card__name">
-                    <a href="#">Canal View Prinsengracht</a>
-                  </h2>
-                  <p className="place-card__type">Apartment</p>
-                </div>
-              </article>
-
-              <article className="near-places__card place-card">
-                <div className="place-card__mark">
-                  <span>Premium</span>
-                </div>
-                <div className="near-places__image-wrapper place-card__image-wrapper">
-                  <a href="#">
-                    <img
-                      className="place-card__image"
-                      src="img/apartment-03.jpg"
-                      width="260"
-                      height="200"
-                      alt="Place image"
-                    />
-                  </a>
-                </div>
-                <div className="place-card__info">
-                  <div className="place-card__price-wrapper">
-                    <div className="place-card__price">
-                      <b className="place-card__price-value">&euro;180</b>
-                      <span className="place-card__price-text">
-                        &#47;&nbsp;night
-                      </span>
-                    </div>
-                  </div>
-                  <div className="place-card__rating rating">
-                    <div className="place-card__stars rating__stars">
-                      <span style={{ width: '100%' }}></span>
-                      <span className="visually-hidden">Rating</span>
-                    </div>
-                  </div>
-                  <h2 className="place-card__name">
-                    <a href="#">Nice, cozy, warm big bed apartment</a>
-                  </h2>
-                  <p className="place-card__type">Apartment</p>
-                </div>
-              </article>
-            </div>
-          </section>
-        </div>
+        {offersBeside.length && (
+          <div className="container">
+            <section className="near-places places">
+              <h2 className="near-places__title">
+                Other places in the neighbourhood
+              </h2>
+              <OffersList
+                offers={offersBeside}
+                listClass="near-places__list"
+                cardClass="near-places"
+                onActiveChange={onActiveChange}
+              />
+            </section>
+          </div>
+        )}
       </main>
     </PageWrapper>
   );

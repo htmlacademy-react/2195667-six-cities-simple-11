@@ -4,21 +4,22 @@ import { Offer } from '../../types/offers';
 
 type Props = {
   offer: Offer;
+  cardClass?: string;
   onCardHover: (offerId: number) => void;
 }
 
 function Card(props: Props): JSX.Element {
-  const { offer } = props;
+  const { offer, cardClass } = props;
   const offerPath = generatePath(AppRoute.Room, { id: String(offer.id) });
 
   return (
     <article
-      className="cities__card place-card"
+      className={`${cardClass || ''}__card place-card`}
       onMouseEnter={() => props.onCardHover(offer.id)}
       onMouseLeave={() => props.onCardHover(-1)}
       id={String(offer.id)}
     >
-      <div className="cities__image-wrapper place-card__image-wrapper">
+      <div className={`${cardClass || ''}__image-wrapper place-card__image-wrapper`}>
         <Link to={offerPath}>
           <img
             className="place-card__image"

@@ -1,35 +1,35 @@
 import { useEffect, useRef } from 'react';
 import useMap from '../../hooks/useMap';
 import { Offers } from '../../types/offers';
-import { Points } from '../../types/map'; //Point
 import { Icon, Marker } from 'leaflet';
 import { City } from '../../types/cities';
+import { MapMarker } from '../../const';
+import { Point } from '../../types/map';
 
 type MapProps = {
   offers: Offers;
   city: City;
+  mapClass?: string;
   // points: Points
-  // selectedPoint: Point | undefined
+  selectedPoint: Point | undefined;
 }
 
 const defaultCustomIcon = new Icon({
-  iconUrl: '/img/pin.svg',
+  iconUrl: MapMarker.Default,
   iconSize: [28, 40],
   iconAnchor: [14, 40]
 });
 
-// const currentCustomIcon = new Icon({
-//   iconUrl: '/img/pin-active.svg',
-//   iconSize: [28, 40],
-//   iconAnchor: [14, 40]
-// });
+const currentCustomIcon = new Icon({
+  iconUrl: MapMarker.Current,
+  iconSize: [28, 40],
+  iconAnchor: [14, 40]
+});
 
 function Map(props: MapProps): JSX.Element {
-  const { offers, city } = props;
+  const { offers, city, mapClass, selectedPoint } = props;
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
-  const points: Points = [];
-  offers.map((offer) => points.push(offer.location));
 
   useEffect(() => {
     if (map) {
@@ -39,12 +39,20 @@ function Map(props: MapProps): JSX.Element {
           lng: point.location.longitude
         });
 
-        marker.setIcon(defaultCustomIcon).addTo(map);
+        marker
+          .setIcon(
+            selectedPoint !== undefined &&
+              point.location.latitude === selectedPoint.latitude &&
+              point.location.longitude === selectedPoint.longitude
+              ? currentCustomIcon
+              : defaultCustomIcon
+          )
+          .addTo(map);
       });
     }
-  }, [map, city, points]);
+  }, [map, city, offers, selectedPoint]);
 
-  return <section className="cities__map map" ref={mapRef} />;
+  return <section className={`map ${mapClass || ''}`} ref={mapRef} />;
 }
 
 export default Map;
