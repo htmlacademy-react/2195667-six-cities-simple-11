@@ -9,6 +9,7 @@ import { comments } from '../../mocks/comments';
 import { City } from '../../types/cities';
 import { Point } from '../../types/map';
 import { Offers } from '../../types/offers';
+import { countRatingStars } from '../../utils/rating';
 import NotFoundPage from '../not-found-page/not-found-page';
 
 type Props = {
@@ -63,7 +64,7 @@ function PlacePage(props: Props): JSX.Element {
               </div>
               <div className="property__rating rating">
                 <div className="property__stars rating__stars">
-                  <span style={{ width: `${(offer.rating * 100) / 5}%` }} />
+                  <span style={{ width: countRatingStars(offer.rating) }} />
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="property__rating-value rating__value">

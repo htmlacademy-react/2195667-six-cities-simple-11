@@ -1,4 +1,6 @@
 import { Comment } from '../../types/comments';
+import { formatDate } from '../../utils/date';
+import { countRatingStars } from '../../utils/rating';
 
 type Props = {
   comment: Comment;
@@ -25,13 +27,13 @@ function ReviewItem(props: Props) {
       <div className="reviews__info">
         <div className="reviews__rating rating">
           <div className="reviews__stars rating__stars">
-            <span style={{ width: `${20 * comment.rating}%` }}></span>
+            <span style={{ width: countRatingStars(comment.rating) }}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <p className="reviews__text">{comment.comment}</p>
         <time className="reviews__time" dateTime={comment.date}>
-          {comment.date}
+          {formatDate(comment.date)}
         </time>
       </div>
     </li>
