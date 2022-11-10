@@ -3,6 +3,8 @@ import Map from '../../components/map/map';
 import OffersList from '../../components/offers-list/offers-list';
 import PageWrapper from '../../components/page-wrapper/page-wrapper';
 import Tabs from '../../components/tabs/tabs';
+import { CITY_LIST } from '../../const';
+import { useAppSelector } from '../../hooks';
 import { City } from '../../types/cities';
 import { Point } from '../../types/map';
 import { Offers } from '../../types/offers';
@@ -17,6 +19,7 @@ function MainPage({ offerCount, offers }: Props): JSX.Element {
     undefined
   );
   const city: City = offers[0].city;
+  const activeCity = useAppSelector((state) => state.city);
 
   const onActiveChange = (id: number) => {
     const point =
@@ -28,13 +31,13 @@ function MainPage({ offerCount, offers }: Props): JSX.Element {
     <PageWrapper pageClass="page--gray page--main">
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
-        <Tabs />
+        <Tabs cities={CITY_LIST} />
         <div className="cities">
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">
-                {offerCount} places to stay in Amsterdam
+                {offerCount} places to stay in {activeCity}
               </b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
