@@ -3,7 +3,7 @@ import { Offers } from '../types/offers';
 export const offers: Offers = [
   {
     city: {
-      name: 'Amsterdam',
+      name: 'Paris',
       location: { latitude: 52.37454, longitude: 4.897976, zoom: 12 }
     },
     previewImage: 'https://11.react.pages.academy/static/hotel/18.jpg',
