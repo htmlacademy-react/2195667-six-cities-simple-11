@@ -4,6 +4,15 @@ export enum AppRoute {
   Room = '/offer/:id'
 }
 
+export const CITY_LIST = [
+  'Paris',
+  'Cologne',
+  'Brussels',
+  'Amsterdam',
+  'Hamburg',
+  'Dusseldorf'
+];
+
 export const MIN_COMMENT_LENGTH = 50;
 
 export const MONTHS = [
