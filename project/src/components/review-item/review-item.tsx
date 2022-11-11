@@ -6,7 +6,7 @@ type Props = {
   comment: Comment;
 }
 
-function ReviewItem(props: Props) {
+function ReviewItem(props: Props): JSX.Element {
   const { comment } = props;
   const user = comment.user;
 

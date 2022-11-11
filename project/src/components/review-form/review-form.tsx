@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react';
 import { MIN_COMMENT_LENGTH } from '../../const';
 
-function ReviewForm() {
+function ReviewForm(): JSX.Element {
   const [reviewData, setReviewData] = useState({
     rating: '',
     review: ''

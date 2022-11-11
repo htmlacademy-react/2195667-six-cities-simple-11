@@ -5,7 +5,7 @@ type Props = {
   comments: Comments;
 }
 
-function ReviewList(props: Props) {
+function ReviewList(props: Props): JSX.Element {
   const { comments } = props;
 
   return (

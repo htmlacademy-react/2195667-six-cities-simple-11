@@ -5,7 +5,7 @@ type Props = {
   cities: string[];
 }
 
-function Tabs(props: Props) {
+function Tabs(props: Props): JSX.Element {
   const { cities } = props;
   const dispatch = useAppDispatch();
   const activeCity = useAppSelector((state) => state.city);
