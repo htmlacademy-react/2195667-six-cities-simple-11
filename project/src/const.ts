@@ -34,3 +34,10 @@ export enum MapMarker {
   Default = '/img/pin.svg',
   Current = '/img/pin-active.svg'
 }
+
+export enum Sort {
+  Popular = 'Popular',
+  PriceASC = 'Price: low to high',
+  PriceDESC = 'Price: high to low',
+  RateDESC = 'Top rated first'
+}

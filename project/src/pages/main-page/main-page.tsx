@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
+import Filter from '../../components/filter/filter';
 import Map from '../../components/map/map';
 import NoResultsPage from '../../components/no-results-page/no-results-page';
 import OffersList from '../../components/offers-list/offers-list';
 import PageWrapper from '../../components/page-wrapper/page-wrapper';
 import Tabs from '../../components/tabs/tabs';
-import { CITY_LIST } from '../../const';
-import { useAppSelector } from '../../hooks';
+import { CITY_LIST, Sort } from '../../const';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { fillOfferList } from '../../store/action';
 import { City } from '../../types/cities';
 import { Point } from '../../types/map';
 import { Offers } from '../../types/offers';
@@ -20,21 +22,78 @@ function MainPage({ offerCount, offers }: Props): JSX.Element {
     undefined
   );
 
-  const [cityOffers, setCityOffers] = useState<Offers | null>(null);
   const city: City = offers[0].city;
   const activeCity = useAppSelector((state) => state.city);
+  const sorting = useAppSelector((state) => state.sorting);
+  const cityOffers = useAppSelector((state) => state.offers);
+  const dispatch = useAppDispatch();
 
   const noResults = cityOffers && cityOffers.length;
 
-  const onActiveChange = (id: number) => {
+  const onActiveChange = (id: number): void => {
     const point =
       id > 0 ? offers.find((offer) => offer.id === id)?.location : undefined;
     setSelectedPoint(point);
   };
 
   useEffect(() => {
-    setCityOffers(offers.filter((offer) => offer.city.name === activeCity));
+    dispatch(
+      fillOfferList({
+        offers: offers.filter((offer) => offer.city.name === activeCity)
+      })
+    );
   }, [activeCity]);
+
+  useEffect(() => {
+    onSortingChange(sorting);
+  }, [activeCity, sorting]);
+
+  const onSortingChange = (sort: string): void => {
+    if (cityOffers && cityOffers.length) {
+      const filteredCityOffers = offers.filter(
+        (offer) => offer.city.name === activeCity
+      );
+
+      const sortedArray: Offers = filteredCityOffers.sort((offer1, offer2) => {
+        if (sort === Sort.PriceASC) {
+          if (offer1.price > offer2.price) {
+            return 1;
+          }
+
+          if (offer1.price < offer2.price) {
+            return -1;
+          }
+          return 0;
+        } else if (sort === Sort.PriceDESC) {
+          if (offer1.price < offer2.price) {
+            return 1;
+          }
+
+          if (offer1.price > offer2.price) {
+            return -1;
+          }
+          return 0;
+        } else if (sort === Sort.RateDESC) {
+          if (offer1.rating < offer2.rating) {
+            return 1;
+          }
+
+          if (offer1.rating > offer2.rating) {
+            return -1;
+          }
+          return 0;
+        } else {
+          return 0;
+        }
+      });
+
+      dispatch(
+        fillOfferList({
+          offers: sortedArray
+        })
+      );
+    }
+  };
 
   return (
     <PageWrapper pageClass="page--gray page--main">
@@ -53,32 +112,7 @@ function MainPage({ offerCount, offers }: Props): JSX.Element {
                 <b className="places__found">
                   {offerCount} places to stay in {activeCity}
                 </b>
-                <form className="places__sorting" action="#" method="get">
-                  <span className="places__sorting-caption">Sort by</span>
-                  <span className="places__sorting-type" tabIndex={0}>
-                    Popular
-                    <svg className="places__sorting-arrow" width="7" height="4">
-                      <use xlinkHref="#icon-arrow-select"></use>
-                    </svg>
-                  </span>
-                  <ul className="places__options places__options--custom places__options--opened">
-                    <li
-                      className="places__option places__option--active"
-                      tabIndex={0}
-                    >
-                      Popular
-                    </li>
-                    <li className="places__option" tabIndex={0}>
-                      Price: low to high
-                    </li>
-                    <li className="places__option" tabIndex={0}>
-                      Price: high to low
-                    </li>
-                    <li className="places__option" tabIndex={0}>
-                      Top rated first
-                    </li>
-                  </ul>
-                </form>
+                <Filter sorting={sorting} />
                 <OffersList
                   offers={cityOffers}
                   listClass="cities__places-list tabs__content"

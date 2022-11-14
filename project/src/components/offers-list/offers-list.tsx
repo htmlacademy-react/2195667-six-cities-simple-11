@@ -8,7 +8,7 @@ type Props = {
   onActiveChange: (id: number) => void;
 }
 
-function OffersList(props: Props) {
+function OffersList(props: Props): JSX.Element {
   return (
     <div className={`places__list ${props.listClass || ''}`}>
       {props.offers.map((offer) => (
