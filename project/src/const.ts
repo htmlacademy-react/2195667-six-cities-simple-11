@@ -4,6 +4,13 @@ export enum AppRoute {
   Room = '/offer/:id'
 }
 
+export enum APIRoute {
+  Offers = '/hotels',
+  Offer = '/hotels/:hotelId',
+  Login = '/login',
+  Logout = '/logout',
+}
+
 export const CITY_LIST = [
   'Paris',
   'Cologne',
