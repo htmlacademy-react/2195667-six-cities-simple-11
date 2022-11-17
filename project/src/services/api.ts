@@ -1,9 +1,10 @@
 import axios, {
   // AxiosError,
   AxiosInstance,
-  // AxiosRequestConfig,
+  AxiosRequestConfig,
   // AxiosResponse
 } from 'axios';
+import { getToken } from './token';
 
 const BACKEND_URL = 'https://11.react.pages.academy/six-cities-simple';
 const REQUEST_TIMEOUT = 5000;
@@ -14,15 +15,15 @@ export const createAPI = (): AxiosInstance => {
     timeout: REQUEST_TIMEOUT
   });
 
-  // api.interceptors.request.use((config: AxiosRequestConfig) => {
-  //   const token = getToken()
+  api.interceptors.request.use((config: AxiosRequestConfig) => {
+    const token = getToken();
 
-  //   if (token && config.headers) {
-  //     config.headers['x-token'] = token
-  //   }
+    if (token && config.headers) {
+      config.headers['X-Token'] = token;
+    }
 
-  //   return config
-  // })
+    return config;
+  });
 
   // api.interceptors.response.use(
   //   response => response,
