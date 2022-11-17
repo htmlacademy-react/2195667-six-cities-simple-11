@@ -5,6 +5,7 @@ import OffersList from '../../components/offers-list/offers-list';
 import PageWrapper from '../../components/page-wrapper/page-wrapper';
 import ReviewForm from '../../components/review-form/review-form';
 import ReviewList from '../../components/review-list/review-list';
+import { useAppSelector } from '../../hooks';
 import { comments } from '../../mocks/comments';
 import { City } from '../../types/cities';
 import { Point } from '../../types/map';
@@ -12,14 +13,11 @@ import { Offers } from '../../types/offers';
 import { countRatingStars } from '../../utils/rating';
 import NotFoundPage from '../not-found-page/not-found-page';
 
-type Props = {
-  offers: Offers;
-}
-
-function PlacePage(props: Props): JSX.Element {
+function PlacePage(): JSX.Element {
+  const offers: Offers = useAppSelector((state) => state.offers);
   const { id } = useParams();
-  const offersBeside = props.offers.slice(0, 3); // TODO: temp data
-  const offer = props.offers.find((el) => String(el.id) === id);
+  const offersBeside = offers.slice(0, 3); // TODO: temp data
+  const offer = offers.find((el) => String(el.id) === id);
   const commentList = comments;
 
   const [selectedPoint, setSelectedPoint] = useState<Point | undefined>(
@@ -28,7 +26,7 @@ function PlacePage(props: Props): JSX.Element {
   const onActiveChange = (offerId: number) => {
     const point =
       offerId > 0
-        ? props.offers.find((offerItem) => offerItem.id === offerId)?.location
+        ? offers.find((offerItem) => offerItem.id === offerId)?.location
         : undefined;
     setSelectedPoint(point);
   };

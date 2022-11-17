@@ -52,6 +52,15 @@ function Map(props: MapProps): JSX.Element {
     }
   }, [map, city, offers, selectedPoint]);
 
+  useEffect(() => {
+    if (map) {
+      map.flyTo(
+        [city.location.latitude, city.location.longitude],
+        city.location.zoom
+      );
+    }
+  }, [map, city]);
+
   return <section className={`map ${mapClass || ''}`} ref={mapRef} />;
 }
 
