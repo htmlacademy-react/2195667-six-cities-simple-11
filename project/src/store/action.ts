@@ -30,8 +30,8 @@ export const fetchOfferList = createAsyncThunk<
 >('offer/fetchList', async (_arg, { dispatch, extra: api }) => {
   dispatch(setDataLoading(true));
   const { data } = await api.get<Offers>(APIRoute.Offers);
-  dispatch(setDataLoading(false));
   dispatch(fillOfferList(data));
+  dispatch(setDataLoading(false));
 });
 
 export const requireAuthorization = createAction<AuthorizationStatus>(
