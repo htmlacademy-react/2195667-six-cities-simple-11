@@ -13,8 +13,13 @@ import { Offers } from '../../types/offers';
 import LoadingScreen from '../loading-screen/loading-screen';
 
 function MainPage(): JSX.Element {
-  const offers: Offers = useAppSelector((state) => state.offers);
-  const [cityOffers, setCityOffers] = useState<Offers>();
+  const activeCity = useAppSelector((state) => state.city);
+  const sorting = useAppSelector((state) => state.sorting);
+  const isDataLoading = useAppSelector((state) => state.loading);
+  const offers: Offers = useAppSelector((state) => state.offers).filter(
+    (offer) => offer.city.name === activeCity
+  );
+
   const [city, setCity] = useState<City>({
     name: 'Paris',
     location: { latitude: 48.85661, longitude: 2.351499, zoom: 13 }
@@ -22,81 +27,43 @@ function MainPage(): JSX.Element {
   const [selectedPoint, setSelectedPoint] = useState<Point | undefined>(
     undefined
   );
-
-  const activeCity = useAppSelector((state) => state.city);
-  const sorting = useAppSelector((state) => state.sorting);
-  const isDataLoading = useAppSelector((state) => state.loading);
-
-  const filteredCityOffers = offers.filter(
-    (offer) => offer.city.name === activeCity
-  );
-  const noResults = cityOffers && cityOffers.length;
+  const noResults = offers && offers.length;
 
   const onActiveChange = (id: number): void => {
     const point =
-      id > 0 ? cityOffers?.find((offer) => offer.id === id)?.location : undefined;
+      id > 0 ? offers?.find((offer) => offer.id === id)?.location : undefined;
     setSelectedPoint(point);
   };
 
   useEffect(() => {
-    if (cityOffers?.length) {
-      setCity(cityOffers[0].city);
+    if (offers?.length) {
+      setCity(offers[0].city);
     }
-  }, [cityOffers]);
+  }, [offers]);
 
   useEffect(() => {
-    setCityOffers(filteredCityOffers);
-
-    // console.log(city)
-    // dispatch(fillOfferList(filteredCityOffers))
-  }, [activeCity, offers]);
-
-  useEffect(() => {
-    onSortingChange(sorting);
+    sortOffers(sorting);
   }, [activeCity, sorting]);
 
-  const onSortingChange = (sort: string): void => {
-    if (cityOffers && cityOffers.length) {
-      // const filteredCityOffers = cityOffers.filter(
-      //   offer => offer.city.name === activeCity
-      // )
-
-      const sortedArray: Offers = filteredCityOffers.sort((offer1, offer2) => {
+  const sortOffers = (sort: string) => {
+    if (offers && offers.length) {
+      const sortedArray: Offers = offers.sort((offer1, offer2) => {
         if (sort === Sort.PriceASC) {
-          if (offer1.price > offer2.price) {
-            return 1;
-          }
-
-          if (offer1.price < offer2.price) {
-            return -1;
-          }
-          return 0;
+          return offer1.price - offer2.price;
         } else if (sort === Sort.PriceDESC) {
-          if (offer1.price < offer2.price) {
-            return 1;
-          }
-
-          if (offer1.price > offer2.price) {
-            return -1;
-          }
-          return 0;
+          return offer2.price - offer1.price;
         } else if (sort === Sort.RateDESC) {
-          if (offer1.rating < offer2.rating) {
-            return 1;
-          }
-
-          if (offer1.rating > offer2.rating) {
-            return -1;
-          }
-          return 0;
+          return offer2.rating - offer1.rating;
         } else {
           return 0;
         }
       });
 
-      setCityOffers(sortedArray);
+      return sortedArray;
     }
   };
+
+  sortOffers(sorting);
 
   if (isDataLoading) {
     return <LoadingScreen />;
@@ -112,16 +79,16 @@ function MainPage(): JSX.Element {
         <h1 className="visually-hidden">Cities</h1>
         <Tabs cities={CITY_LIST} />
         <div className="cities">
-          {cityOffers && cityOffers.length ? (
+          {offers && offers.length ? (
             <div className="cities__places-container container">
               <section className="cities__places places">
                 <h2 className="visually-hidden">Places</h2>
                 <b className="places__found">
-                  {cityOffers.length} places to stay in {activeCity}
+                  {offers.length} places to stay in {activeCity}
                 </b>
                 <Filter sorting={sorting} />
                 <OffersList
-                  offers={cityOffers}
+                  offers={offers}
                   listClass="cities__places-list tabs__content"
                   cardClass="cities"
                   onActiveChange={onActiveChange}
@@ -133,7 +100,7 @@ function MainPage(): JSX.Element {
               >
                 <Map
                   selectedPoint={selectedPoint}
-                  offers={cityOffers}
+                  offers={offers}
                   city={city}
                   mapClass="cities__map"
                 />

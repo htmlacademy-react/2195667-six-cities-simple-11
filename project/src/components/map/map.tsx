@@ -10,7 +10,6 @@ type MapProps = {
   offers: Offers;
   city: City;
   mapClass?: string;
-  // points: Points
   selectedPoint: Point | undefined;
 }
 
@@ -32,6 +31,7 @@ function Map(props: MapProps): JSX.Element {
   const map = useMap(mapRef, city);
 
   useEffect(() => {
+    const markers: Marker[] = [];
     if (map) {
       offers.forEach((point) => {
         const marker = new Marker({
@@ -48,13 +48,23 @@ function Map(props: MapProps): JSX.Element {
               : defaultCustomIcon
           )
           .addTo(map);
+
+        markers.push(marker);
       });
     }
+
+    return () => {
+      if (map) {
+        markers.forEach((marker) => {
+          marker.removeFrom(map);
+        });
+      }
+    };
   }, [map, city, offers, selectedPoint]);
 
   useEffect(() => {
     if (map) {
-      map.flyTo(
+      map.setView(
         [city.location.latitude, city.location.longitude],
         city.location.zoom
       );
