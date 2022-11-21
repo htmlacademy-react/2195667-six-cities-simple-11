@@ -1,39 +1,40 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Map from '../../components/map/map';
 import OffersList from '../../components/offers-list/offers-list';
 import PageWrapper from '../../components/page-wrapper/page-wrapper';
 import ReviewForm from '../../components/review-form/review-form';
 import ReviewList from '../../components/review-list/review-list';
-import { useAppSelector } from '../../hooks';
-import { comments } from '../../mocks/comments';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { getOffer } from '../../store/action';
 import { City } from '../../types/cities';
-import { Point } from '../../types/map';
 import { Offers } from '../../types/offers';
 import { countRatingStars } from '../../utils/rating';
+import LoadingScreen from '../loading-screen/loading-screen';
 import NotFoundPage from '../not-found-page/not-found-page';
 
 function PlacePage(): JSX.Element {
-  const offers: Offers = useAppSelector((state) => state.offers);
   const { id } = useParams();
-  const offersBeside = offers.slice(0, 3); // TODO: temp data
-  const offer = offers.find((el) => String(el.id) === id);
-  const commentList = comments;
+  const dispatch = useAppDispatch();
+  const isDataLoading = useAppSelector((state) => state.loading);
+  const offer = useAppSelector((state) => state.offer);
+  const offersBeside = useAppSelector((state) => state.besideList);
+  const commentList = useAppSelector((state) => state.comments);
 
-  const [selectedPoint, setSelectedPoint] = useState<Point | undefined>(
-    offer?.location
-  );
-  const onActiveChange = (offerId: number) => {
-    const point =
-      offerId > 0
-        ? offers.find((offerItem) => offerItem.id === offerId)?.location
-        : undefined;
-    setSelectedPoint(point);
-  };
+  useEffect(() => {
+    dispatch(getOffer(String(id)));
+  }, [id]);
+
+  if (isDataLoading) {
+    return <LoadingScreen />;
+  }
 
   if (!offer) {
     return <NotFoundPage />;
   }
+
+  const selectedPoint = offer.location;
+  const mapOffers: Offers = offersBeside.concat([offer]);
 
   const city: City = offer.city;
 
@@ -128,7 +129,7 @@ function PlacePage(): JSX.Element {
 
           <Map
             selectedPoint={selectedPoint}
-            offers={offersBeside}
+            offers={mapOffers}
             city={city}
             mapClass="property__map"
           />
@@ -144,7 +145,6 @@ function PlacePage(): JSX.Element {
                 offers={offersBeside}
                 listClass="near-places__list"
                 cardClass="near-places"
-                onActiveChange={onActiveChange}
               />
             </section>
           </div>

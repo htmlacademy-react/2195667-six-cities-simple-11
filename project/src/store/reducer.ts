@@ -1,3 +1,4 @@
+import { Comments } from './../types/comments';
 import { AuthorizationStatus, CITY_LIST, Sort } from './../const';
 import {
   changeCity,
@@ -7,6 +8,8 @@ import {
   setDataLoading,
   fillOffer,
   setUserName,
+  fillBesideList,
+  fillCommentList,
 } from './action';
 import { createReducer } from '@reduxjs/toolkit';
 import { Offer, Offers } from '../types/offers';
@@ -15,6 +18,8 @@ type InitialState = {
   city: string;
   offers: Offers;
   offer: Offer | null;
+  besideList: Offers;
+  comments: Comments;
   sorting: string;
   loading: boolean;
   authorizationStatus: AuthorizationStatus;
@@ -25,6 +30,8 @@ const initialState: InitialState = {
   city: CITY_LIST[0],
   offers: [],
   offer: null,
+  besideList: [],
+  comments: [],
   sorting: Sort.Popular,
   loading: true,
   authorizationStatus: AuthorizationStatus.Unknown,
@@ -42,6 +49,12 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(fillOffer, (state, action) => {
       state.offer = action.payload;
+    })
+    .addCase(fillBesideList, (state, action) => {
+      state.besideList = action.payload;
+    })
+    .addCase(fillCommentList, (state, action) => {
+      state.comments = action.payload;
     })
     .addCase(changeSorting, (state, action) => {
       const { sorting } = action.payload;

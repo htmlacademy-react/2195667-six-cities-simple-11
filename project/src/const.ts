@@ -6,9 +6,9 @@ export enum AppRoute {
 
 export enum APIRoute {
   Offers = '/hotels',
-  Offer = '/hotels/:hotelId',
   Login = '/login',
   Logout = '/logout',
+  Comments = '/comments'
 }
 
 export enum AuthorizationStatus {

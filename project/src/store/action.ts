@@ -1,3 +1,4 @@
+import { Comments } from './../types/comments';
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosInstance, AxiosResponse } from 'axios';
 import { APIRoute, AppRoute, AuthorizationStatus } from '../const';
@@ -15,6 +16,8 @@ export const changeCity = createAction<{
 
 export const fillOfferList = createAction<Offers>('offer/fillList');
 export const fillOffer = createAction<Offer>('offer/fill');
+export const fillBesideList = createAction<Offers>('offer/fillBesideList');
+export const fillCommentList = createAction<Comments>('offer/fillCommentList');
 
 export const changeSorting = createAction<{
   sorting: string;
@@ -39,7 +42,7 @@ export const fetchOfferList = createAsyncThunk<
 
 export const getOffer = createAsyncThunk<
   void,
-  { id: number },
+  string ,
   {
     dispatch: AppDispatch;
     state: State;
@@ -47,8 +50,13 @@ export const getOffer = createAsyncThunk<
   }
 >('offer/getOffer', async (id, { dispatch, extra: api }) => {
   dispatch(setDataLoading(true));
-  const { data } = await api.get<Offer>(APIRoute.Offer, { data: { id: id } });
+  const { data } = await api.get<Offer>(`${APIRoute.Offers}/${id}`);
   dispatch(fillOffer(data));
+
+  const offersBeside = await api.get<Offers>(`${APIRoute.Offers}/${id}/nearby`);
+  const comments = await api.get<Comments>(`${APIRoute.Comments}/${id}`);
+  dispatch(fillBesideList(offersBeside.data));
+  dispatch(fillCommentList(comments.data));
   dispatch(setDataLoading(false));
 });
 
