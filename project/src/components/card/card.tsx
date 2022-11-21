@@ -19,7 +19,16 @@ function Card(props: Props): JSX.Element {
       onMouseLeave={() => props.onCardHover(-1)}
       id={String(offer.id)}
     >
-      <div className={`${cardClass || ''}__image-wrapper place-card__image-wrapper`}>
+      {offer.isPremium && (
+        <div className="place-card__mark">
+          <span>Premium</span>
+        </div>
+      )}
+      <div
+        className={`${
+          cardClass || ''
+        }__image-wrapper place-card__image-wrapper`}
+      >
         <Link to={offerPath}>
           <img
             className="place-card__image"

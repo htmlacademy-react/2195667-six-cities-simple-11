@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
-import { useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { logoutAction } from '../../store/action';
 
 function Header(): JSX.Element {
   const authState = useAppSelector((state) => state.authorizationStatus);
+  const userName = useAppSelector((state) => state.userName);
+  const dispatch = useAppDispatch();
 
   return (
     <header className="header">
@@ -28,12 +31,18 @@ function Header(): JSX.Element {
                   <div className="header__nav-profile">
                     <div className="header__avatar-wrapper user__avatar-wrapper"></div>
                     <span className="header__user-name user__name">
-                      Oliver.conner@gmail.com
+                      {userName}
                     </span>
                   </div>
                 </li>
                 <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
+                  <a className="header__nav-link" href="/" onClick={
+                    (evt) => {
+                      evt.preventDefault();
+                      dispatch(logoutAction());
+                    }
+                  }
+                  >
                     <span className="header__signout">Sign out</span>
                   </a>
                 </li>
