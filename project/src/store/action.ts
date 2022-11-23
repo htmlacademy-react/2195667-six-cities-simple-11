@@ -1,4 +1,4 @@
-import { Comments } from './../types/comments';
+import { CommentData, Comments } from './../types/comments';
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosInstance, AxiosResponse } from 'axios';
 import { APIRoute, AppRoute, AuthorizationStatus } from '../const';
@@ -118,3 +118,20 @@ export const logoutAction = createAsyncThunk<
   setUserName(null);
   dispatch(requireAuthorization(AuthorizationStatus.NoAuth));
 });
+
+export const postComment = createAsyncThunk<
+  void,
+  CommentData,
+  {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }
+>(
+  'offer/postComment',
+  async ({ offerId, comment, rating }, { dispatch, extra: api }) => {
+    await api.post<CommentData>(`${APIRoute.Comments}/${offerId}`, { comment, rating });
+    const comments = await api.get<Comments>(`${APIRoute.Comments}/${offerId}`);
+    dispatch(fillCommentList(comments.data));
+  }
+);

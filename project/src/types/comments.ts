@@ -6,11 +6,17 @@ export type CommentUser = {
 }
 
 export type Comment = {
-  id: number;
-  user: CommentUser;
   rating: number;
   comment: string;
+  id: number;
+  user: CommentUser;
   date: string;
+}
+
+export type CommentData = {
+  offerId: number;
+  comment: string;
+  rating: number;
 }
 
 export type Comments = Comment[]

@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Map from '../../components/map/map';
 import OffersList from '../../components/offers-list/offers-list';
 import PageWrapper from '../../components/page-wrapper/page-wrapper';
 import ReviewForm from '../../components/review-form/review-form';
 import ReviewList from '../../components/review-list/review-list';
+import { AppRoute, AuthorizationStatus } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getOffer } from '../../store/action';
 import { City } from '../../types/cities';
@@ -14,6 +15,9 @@ import LoadingScreen from '../loading-screen/loading-screen';
 import NotFoundPage from '../not-found-page/not-found-page';
 
 function PlacePage(): JSX.Element {
+  const isAuth =
+    useAppSelector((state) => state.authorizationStatus) ===
+    AuthorizationStatus.Auth;
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const isDataLoading = useAppSelector((state) => state.loading);
@@ -119,10 +123,24 @@ function PlacePage(): JSX.Element {
               <section className="property__reviews reviews">
                 <h2 className="reviews__title">
                   Reviews &middot;{' '}
-                  <span className="reviews__amount">{commentList.length}</span>
+                  <span className="reviews__amount">
+                    {commentList.length < 10 ? commentList.length : 10}
+                  </span>
                 </h2>
                 <ReviewList comments={commentList} />
-                <ReviewForm />
+
+                {isAuth ? (
+                  <ReviewForm offerId={offer.id} />
+                ) : (
+                  <div className="reviews__form">
+                    <label className="reviews__label form__label">
+                      <Link to={AppRoute.Login} style={{ color: '#4481c3' }}>
+                        Login{' '}
+                      </Link>
+                      to leave a comment
+                    </label>
+                  </div>
+                )}
               </section>
             </div>
           </div>
