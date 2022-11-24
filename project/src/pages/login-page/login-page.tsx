@@ -1,21 +1,20 @@
 import { FormEvent, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import PageWrapper from '../../components/page-wrapper/page-wrapper';
-import { AppRoute } from '../../const';
-import { useAppDispatch } from '../../hooks';
+import { AppRoute, AuthorizationStatus } from '../../const';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { loginAction } from '../../store/action';
 import { AuthData } from '../../types/auth-data';
 
 function LoginPage(): JSX.Element {
+  const isAuth = useAppSelector((state) => state.authorizationStatus) === AuthorizationStatus.Auth;
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
 
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const onSubmit = (authData: AuthData) => {
     dispatch(loginAction(authData));
-    navigate(AppRoute.Main);
   };
 
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
@@ -28,6 +27,10 @@ function LoginPage(): JSX.Element {
       });
     }
   };
+
+  if (isAuth) {
+    return <Navigate to={AppRoute.Main} />;
+  }
 
   return (
     <PageWrapper pageClass="page--gray page--login">

@@ -5,21 +5,36 @@ import { Offer } from '../../types/offers';
 type Props = {
   offer: Offer;
   cardClass?: string;
-  onCardHover: (offerId: number) => void;
+  onCardHover?: (offerId: number) => void;
 }
 
 function Card(props: Props): JSX.Element {
   const { offer, cardClass } = props;
   const offerPath = generatePath(AppRoute.Room, { id: String(offer.id) });
 
+  const onCardHover = (id: number) => {
+    if (props.onCardHover) {
+      props.onCardHover(id);
+    }
+  };
+
   return (
     <article
       className={`${cardClass || ''}__card place-card`}
-      onMouseEnter={() => props.onCardHover(offer.id)}
-      onMouseLeave={() => props.onCardHover(-1)}
+      onMouseEnter={() => onCardHover(offer.id)}
+      onMouseLeave={() => onCardHover(-1)}
       id={String(offer.id)}
     >
-      <div className={`${cardClass || ''}__image-wrapper place-card__image-wrapper`}>
+      {offer.isPremium && (
+        <div className="place-card__mark">
+          <span>Premium</span>
+        </div>
+      )}
+      <div
+        className={`${
+          cardClass || ''
+        }__image-wrapper place-card__image-wrapper`}
+      >
         <Link to={offerPath}>
           <img
             className="place-card__image"

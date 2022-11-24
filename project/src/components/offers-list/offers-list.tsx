@@ -5,7 +5,7 @@ type Props = {
   offers: Offers;
   listClass?: string;
   cardClass?: string;
-  onActiveChange: (id: number) => void;
+  onActiveChange?: (id: number) => void;
 }
 
 function OffersList(props: Props): JSX.Element {
