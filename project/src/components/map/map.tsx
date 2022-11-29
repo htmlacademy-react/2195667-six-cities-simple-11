@@ -31,8 +31,9 @@ function Map(props: MapProps): JSX.Element {
   const map = useMap(mapRef, city);
 
   useEffect(() => {
+    let isMounted = true;
     const markers: Marker[] = [];
-    if (map) {
+    if (map && isMounted) {
       offers.forEach((point) => {
         const marker = new Marker({
           lat: point.location.latitude,
@@ -54,6 +55,7 @@ function Map(props: MapProps): JSX.Element {
     }
 
     return () => {
+      isMounted = false;
       if (map) {
         markers.forEach((marker) => {
           marker.removeFrom(map);
@@ -63,12 +65,17 @@ function Map(props: MapProps): JSX.Element {
   }, [map, city, offers, selectedPoint]);
 
   useEffect(() => {
-    if (map) {
+    let isMounted = true;
+    if (map && isMounted) {
       map.setView(
         [city.location.latitude, city.location.longitude],
         city.location.zoom
       );
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [map, city]);
 
   return <section className={`map ${mapClass || ''}`} ref={mapRef} />;

@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom';
 import PageWrapper from '../../components/page-wrapper/page-wrapper';
+import { AppRoute } from '../../const';
 
 function NotFoundPage() {
   return (
@@ -9,6 +11,7 @@ function NotFoundPage() {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <b className="places__found">404. Page not found</b>
+              <Link to={AppRoute.Main}>Back to main page</Link>
             </section>
           </div>
         </div>
