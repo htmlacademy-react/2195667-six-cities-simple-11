@@ -116,6 +116,7 @@ function MainPage(): JSX.Element {
                   onActiveChange={onActiveChange}
                 />
               </section>
+
               <div
                 className="cities__right-section"
                 style={{ width: 'calc(100% - 572px)' }}
