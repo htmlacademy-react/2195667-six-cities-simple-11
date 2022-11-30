@@ -26,7 +26,14 @@ function PlacePage(): JSX.Element {
   const commentList = useAppSelector((state) => state.comments);
 
   useEffect(() => {
-    dispatch(getOffer(String(id)));
+    let isMounted = true;
+    if (isMounted) {
+      dispatch(getOffer(String(id)));
+    }
+
+    return () => {
+      isMounted = false;
+    };
   }, [id]);
 
   if (isDataLoading) {

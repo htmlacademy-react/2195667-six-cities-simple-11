@@ -6,13 +6,15 @@ import OffersList from '../../components/offers-list/offers-list';
 import PageWrapper from '../../components/page-wrapper/page-wrapper';
 import Tabs from '../../components/tabs/tabs';
 import { CITY_LIST, Sort } from '../../const';
-import { useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { fetchOfferList } from '../../store/action';
 import { City } from '../../types/cities';
 import { Point } from '../../types/map';
 import { Offers } from '../../types/offers';
 import LoadingScreen from '../loading-screen/loading-screen';
 
 function MainPage(): JSX.Element {
+  const dispatch = useAppDispatch();
   const activeCity = useAppSelector((state) => state.city);
   const sorting = useAppSelector((state) => state.sorting);
   const isDataLoading = useAppSelector((state) => state.loading);
@@ -27,7 +29,7 @@ function MainPage(): JSX.Element {
   const [selectedPoint, setSelectedPoint] = useState<Point | undefined>(
     undefined
   );
-  const noResults = offers && offers.length;
+  const noResults = !offers || !offers.length;
 
   const onActiveChange = (id: number): void => {
     const point =
@@ -36,13 +38,33 @@ function MainPage(): JSX.Element {
   };
 
   useEffect(() => {
-    if (offers?.length) {
+    let isMounted = true;
+    if (isMounted) {
+      dispatch(fetchOfferList());
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (isMounted && offers?.length) {
       setCity(offers[0].city);
     }
+    return () => {
+      isMounted = false;
+    };
   }, [offers]);
 
   useEffect(() => {
-    sortOffers(sorting);
+    let isMounted = true;
+    if (isMounted) {
+      sortOffers(sorting);
+    }
+    return () => {
+      isMounted = false;
+    };
   }, [activeCity, sorting]);
 
   const sortOffers = (sort: string) => {
@@ -73,7 +95,7 @@ function MainPage(): JSX.Element {
     <PageWrapper pageClass="page--gray page--main">
       <main
         className={`page__main page__main--index ${
-          !noResults ? 'page__main--index-empty' : ''
+          noResults ? 'page__main--index-empty' : ''
         }`}
       >
         <h1 className="visually-hidden">Cities</h1>

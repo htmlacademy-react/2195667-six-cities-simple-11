@@ -1,12 +1,13 @@
 import { CommentData, Comments } from './../types/comments';
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { AxiosInstance, AxiosResponse } from 'axios';
+import { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { APIRoute, AppRoute, AuthorizationStatus } from '../const';
 import { dropToken, saveToken } from '../services/token';
 import { AuthData } from '../types/auth-data';
 import { Offer, Offers } from '../types/offers';
 import { AppDispatch, State } from '../types/state';
 import { UserData } from '../types/user-data';
+import { toast } from 'react-toastify';
 
 export const redirectToRoute = createAction<AppRoute>('app/redirectToRoute');
 
@@ -42,7 +43,7 @@ export const fetchOfferList = createAsyncThunk<
 
 export const getOffer = createAsyncThunk<
   void,
-  string ,
+  string,
   {
     dispatch: AppDispatch;
     state: State;
@@ -50,13 +51,20 @@ export const getOffer = createAsyncThunk<
   }
 >('offer/getOffer', async (id, { dispatch, extra: api }) => {
   dispatch(setDataLoading(true));
-  const { data } = await api.get<Offer>(`${APIRoute.Offers}/${id}`);
-  dispatch(fillOffer(data));
+  try {
+    const { data } = await api.get<Offer>(`${APIRoute.Offers}/${id}`);
+    dispatch(fillOffer(data));
 
-  const offersBeside = await api.get<Offers>(`${APIRoute.Offers}/${id}/nearby`);
-  const comments = await api.get<Comments>(`${APIRoute.Comments}/${id}`);
-  dispatch(fillBesideList(offersBeside.data));
-  dispatch(fillCommentList(comments.data));
+    const offersBeside = await api.get<Offers>(
+      `${APIRoute.Offers}/${id}/nearby`
+    );
+    const comments = await api.get<Comments>(`${APIRoute.Comments}/${id}`);
+    dispatch(fillBesideList(offersBeside.data));
+    dispatch(fillCommentList(comments.data));
+  } catch (err) {
+    const error = err as Error | AxiosError;
+    toast.error(error.message);
+  }
   dispatch(setDataLoading(false));
 });
 
@@ -130,7 +138,10 @@ export const postComment = createAsyncThunk<
 >(
   'offer/postComment',
   async ({ offerId, comment, rating }, { dispatch, extra: api }) => {
-    await api.post<CommentData>(`${APIRoute.Comments}/${offerId}`, { comment, rating });
+    await api.post<CommentData>(`${APIRoute.Comments}/${offerId}`, {
+      comment,
+      rating
+    });
     const comments = await api.get<Comments>(`${APIRoute.Comments}/${offerId}`);
     dispatch(fillCommentList(comments.data));
   }

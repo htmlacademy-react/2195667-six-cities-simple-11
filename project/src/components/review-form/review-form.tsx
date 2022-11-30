@@ -47,6 +47,7 @@ function ReviewForm(props: Props): JSX.Element {
               id={`${i}-stars`}
               type="radio"
               onChange={dataChangeHandle}
+              checked={i.toString() === reviewData.rating.toString()}
             />
             <label
               htmlFor={`${i}-stars`}

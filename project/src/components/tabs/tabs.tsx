@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { changeCity } from '../../store/action';
 
@@ -36,4 +37,7 @@ function Tabs(props: Props): JSX.Element {
   );
 }
 
-export default Tabs;
+export default memo(
+  Tabs,
+  (prevProps, nextProps) => prevProps.cities === nextProps.cities
+);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Sort } from '../../const';
 import { useAppDispatch } from '../../hooks';
 import { changeSorting } from '../../store/action';
@@ -52,4 +52,8 @@ function Filter(props: Props): JSX.Element {
   );
 }
 
-export default Filter;
+
+export default memo(
+  Filter,
+  (prevProps, nextProps) => prevProps.sorting === nextProps.sorting
+);

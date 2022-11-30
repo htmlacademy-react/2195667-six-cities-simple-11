@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Offers } from '../../types/offers';
 import Card from '../card/card';
 
@@ -23,4 +24,8 @@ function OffersList(props: Props): JSX.Element {
   );
 }
 
-export default OffersList;
+export default memo(
+  OffersList,
+  (prevProps, nextProps) =>
+    JSON.stringify(prevProps.offers) === JSON.stringify(nextProps.offers)
+);
