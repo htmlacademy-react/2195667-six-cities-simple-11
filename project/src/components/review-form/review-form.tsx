@@ -1,5 +1,5 @@
 import { ChangeEvent, Fragment, MouseEvent, useState } from 'react';
-import { MIN_COMMENT_LENGTH } from '../../const';
+import { MAX_COMMENT_LENGTH, MIN_COMMENT_LENGTH } from '../../const';
 import { useAppDispatch } from '../../hooks';
 import { postComment } from '../../store/action';
 
@@ -10,6 +10,7 @@ type Props = {
 function ReviewForm(props: Props): JSX.Element {
   const { offerId } = props;
   const dispatch = useAppDispatch();
+  const [isSending, setIsSending] = useState(false);
   const [reviewData, setReviewData] = useState({
     rating: 0,
     review: ''
@@ -23,6 +24,7 @@ function ReviewForm(props: Props): JSX.Element {
   };
 
   const handleSendReview = (evt: MouseEvent<HTMLElement>) => {
+    setIsSending(true);
     evt.preventDefault();
     const { rating, review } = reviewData;
     dispatch(postComment({ offerId, comment: review, rating }));
@@ -30,6 +32,7 @@ function ReviewForm(props: Props): JSX.Element {
       rating: 0,
       review: ''
     });
+    setIsSending(false);
   };
 
   return (
@@ -48,6 +51,7 @@ function ReviewForm(props: Props): JSX.Element {
               type="radio"
               onChange={dataChangeHandle}
               checked={i.toString() === reviewData.rating.toString()}
+              disabled={isSending}
             />
             <label
               htmlFor={`${i}-stars`}
@@ -68,6 +72,7 @@ function ReviewForm(props: Props): JSX.Element {
         placeholder="Tell how was your stay, what you like and what can be improved"
         value={reviewData.review}
         onChange={dataChangeHandle}
+        disabled={isSending}
       >
       </textarea>
       <div className="reviews__button-wrapper">
@@ -84,8 +89,10 @@ function ReviewForm(props: Props): JSX.Element {
           className="reviews__submit form__submit button"
           type="submit"
           disabled={
+            isSending ||
             reviewData.rating < 1 ||
-            reviewData.review.length < MIN_COMMENT_LENGTH
+            reviewData.review.length < MIN_COMMENT_LENGTH ||
+            reviewData.review.length > MAX_COMMENT_LENGTH
           }
           onClick={(evt) => {
             handleSendReview(evt);
