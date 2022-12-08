@@ -138,11 +138,18 @@ export const postComment = createAsyncThunk<
 >(
   'offer/postComment',
   async ({ offerId, comment, rating }, { dispatch, extra: api }) => {
-    await api.post<CommentData>(`${APIRoute.Comments}/${offerId}`, {
-      comment,
-      rating
-    });
-    const comments = await api.get<Comments>(`${APIRoute.Comments}/${offerId}`);
-    dispatch(fillCommentList(comments.data));
+    try {
+      await api.post<CommentData>(`${APIRoute.Comments}/${offerId}`, {
+        comment,
+        rating
+      });
+      const comments = await api.get<Comments>(
+        `${APIRoute.Comments}/${offerId}`
+      );
+      dispatch(fillCommentList(comments.data));
+    } catch (err) {
+      const error = err as Error | AxiosError;
+      toast.error(error.message);
+    }
   }
 );

@@ -1,6 +1,7 @@
 import { generatePath, Link } from 'react-router-dom';
 import { AppRoute } from '../../const';
 import { Offer } from '../../types/offers';
+import { countRatingStars } from '../../utils/rating';
 
 type Props = {
   offer: Offer;
@@ -54,7 +55,7 @@ function Card(props: Props): JSX.Element {
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: `${(offer.rating * 100) / 5}%` }}></span>
+            <span style={{ width: countRatingStars(offer.rating) }}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
