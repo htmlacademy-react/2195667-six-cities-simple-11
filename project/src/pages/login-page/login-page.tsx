@@ -1,13 +1,16 @@
 import { FormEvent, useRef } from 'react';
 import { Navigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import PageWrapper from '../../components/page-wrapper/page-wrapper';
-import { AppRoute, AuthorizationStatus } from '../../const';
+import { AppRoute, AuthorizationStatus, PASSWORD_VALIDATION_FAIL_TEXT } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { loginAction } from '../../store/action';
 import { AuthData } from '../../types/auth-data';
 
 function LoginPage(): JSX.Element {
-  const isAuth = useAppSelector((state) => state.authorizationStatus) === AuthorizationStatus.Auth;
+  const isAuth =
+    useAppSelector((state) => state.authorizationStatus) ===
+    AuthorizationStatus.Auth;
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
 
@@ -21,6 +24,15 @@ function LoginPage(): JSX.Element {
     evt.preventDefault();
 
     if (loginRef.current !== null && passwordRef.current !== null) {
+      if (
+        !/^([A-Za-z].*[0-9]|[0-9].*[A-Za-z])$/.test(
+          passwordRef.current.value.toString()
+        )
+      ) {
+        toast.error(PASSWORD_VALIDATION_FAIL_TEXT);
+        return;
+      }
+
       onSubmit({
         login: loginRef.current.value,
         password: passwordRef.current.value
