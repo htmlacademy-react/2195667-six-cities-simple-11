@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getOffer } from '../../store/action';
 import { City } from '../../types/cities';
 import { Offers } from '../../types/offers';
+import { pluralize } from '../../utils/pluralize';
 import { countRatingStars } from '../../utils/rating';
 import LoadingScreen from '../loading-screen/loading-screen';
 import NotFoundPage from '../not-found-page/not-found-page';
@@ -86,10 +87,10 @@ function PlacePage(): JSX.Element {
                   {offer.type}
                 </li>
                 <li className="property__feature property__feature--bedrooms">
-                  {offer.bedrooms} Bedrooms
+                  {pluralize(offer.bedrooms, 'Bedroom')}
                 </li>
                 <li className="property__feature property__feature--adults">
-                  Max {offer.maxAdults} adults
+                  Max {pluralize(offer.maxAdults, 'adult')}
                 </li>
               </ul>
               <div className="property__price">

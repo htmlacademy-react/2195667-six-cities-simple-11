@@ -55,3 +55,5 @@ export enum Sort {
   PriceDESC = 'Price: high to low',
   RateDESC = 'Top rated first'
 }
+
+export const PASSWORD_VALIDATION_FAIL_TEXT = 'Password must contain at least one letter and number';
